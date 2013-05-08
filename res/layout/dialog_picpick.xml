@@ -1,0 +1,91 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="1000dp"  >
+    
+    <LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_margin="15dp"
+	    android:background="#FFFFFF"
+	    >
+    
+	    <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="10dp"
+	        android:background="#D6D5CE"
+	        android:text="Choose image"
+	        android:textColor="#000000"
+	        />
+	    
+	    <Button android:id="@+id/dialog_picpick_btn_chooser"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="20dp"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginBottom="20dp"
+	        android:padding="20dp"
+	        android:background="@drawable/dotted"
+	        android:text="Click to chooser"
+	        />
+	    
+	    <RelativeLayout android:id="@+id/dialog_picpick_view_image"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+	    	android:layout_marginTop="20dp"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginBottom="20dp"
+		    >
+	    	
+	    	<LinearLayout android:id="@+id/dialog_picpick_view_buttons"
+	    	    android:orientation="horizontal"
+	    	    android:layout_alignParentBottom="true"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content">
+	    	    
+	    	    <Button android:id="@+id/dialog_picpick_btn_rotate"
+			        android:layout_width="0dp"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginLeft="5dp"
+			        android:layout_marginRight="5dp"
+			        android:layout_marginBottom="5dp"
+			        android:padding="5dp"
+			        android:text="Rotate"
+			        />
+	    	    
+	    	    <Button android:id="@+id/dialog_picpick_btn_done"
+			        android:layout_width="0dp"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginLeft="5dp"
+			        android:layout_marginRight="5dp"
+			        android:layout_marginBottom="5dp"
+			        android:padding="5dp"
+			        android:text="Done"
+			        />
+	    	    
+	    	</LinearLayout>
+	    	
+	    	<ImageView android:id="@+id/dialog_picpick_img"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentTop="true"
+		        android:layout_above="@id/dialog_picpick_view_buttons"
+		        android:scaleType="fitCenter"
+		        android:adjustViewBounds="true"
+		        android:clickable="true"
+		        />
+	    	
+		</RelativeLayout>
+	    
+	</LinearLayout>
+    
+</LinearLayout>
