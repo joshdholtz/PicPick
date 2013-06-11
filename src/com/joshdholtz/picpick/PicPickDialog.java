@@ -47,6 +47,7 @@ public class PicPickDialog extends DialogFragment {
 	View view;
 
 	Button btnChoose;
+	Button btnCancel;
 	Button btnRotate;
 	Button btnDone;
 	RelativeLayout viewImage;
@@ -64,6 +65,13 @@ public class PicPickDialog extends DialogFragment {
 		this.listener = listener;
 	}
 
+	/**
+	 * @param bmp the bmp to set
+	 */
+	public void setBmp(Bitmap bmp) {
+		this.bmp = bmp;
+	}
+
 	/** The system calls this to get the DialogFragment's layout, regardless
 	of whether it's being displayed as a dialog or an embedded fragment. */
 	@Override
@@ -72,12 +80,14 @@ public class PicPickDialog extends DialogFragment {
 		view = inflater.inflate(R.layout.dialog_picpick, container, false);
 
 		btnChoose = (Button) view.findViewById(R.id.dialog_picpick_btn_chooser);
+		btnCancel = (Button) view.findViewById(R.id.dialog_picpick_btn_cancel);
 		btnRotate = (Button) view.findViewById(R.id.dialog_picpick_btn_rotate);
 		btnDone = (Button) view.findViewById(R.id.dialog_picpick_btn_done);
 		viewImage = (RelativeLayout) view.findViewById(R.id.dialog_picpick_view_image);
 		img = (ImageView) view.findViewById(R.id.dialog_picpick_img);
 
 		btnChoose.setOnClickListener(chooseOnClickListener);
+		btnCancel.setOnClickListener(cancelOnClickListener);
 		btnRotate.setOnClickListener(rotateOnClickListener);
 		btnDone.setOnClickListener(doneOnClickListener);
 		img.setOnClickListener(chooseOnClickListener);
@@ -249,6 +259,15 @@ public class PicPickDialog extends DialogFragment {
 				}
 			});
 			alertBuilder.show();
+		}
+	};
+	
+	final View.OnClickListener cancelOnClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (listener != null) {
+				listener.picPickDialogFinished(PicPickDialog.this, null);
+			}
 		}
 	};
 
