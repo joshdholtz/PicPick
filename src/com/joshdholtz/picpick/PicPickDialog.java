@@ -228,8 +228,19 @@ public class PicPickDialog extends DialogFragment {
 				// Loads from data
 				if (u != null) {
 					try {
-						bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), u);
-					} catch (Exception e) { e.printStackTrace(); }
+						try {
+							bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), u);
+						} catch (OutOfMemoryError e) { 
+							try {
+								System.gc();
+								bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), u);
+							} catch (OutOfMemoryError e2) {
+								e2.printStackTrace();
+							}
+						}
+					}catch(Exception e) {
+						e.printStackTrace(); 
+					}
 				} else {
 					bmp = (Bitmap) imageReturnedIntent.getExtras().get("data");
 				}
