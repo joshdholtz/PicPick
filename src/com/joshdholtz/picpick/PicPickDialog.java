@@ -125,9 +125,11 @@ public class PicPickDialog extends DialogFragment {
 
 					BitmapFactory.Options options = new BitmapFactory.Options();
 					options.inSampleSize = 2;
+					
 					try {
 						bmp = BitmapFactory.decodeFile(filePath, options);
 					}catch(OutOfMemoryError e) {
+						
 						System.gc();
 						
 						try {
@@ -348,8 +350,20 @@ public class PicPickDialog extends DialogFragment {
 			mtx.preRotate(rotate);
 
 			// Rotating Bitmap & convert to ARGB_8888, required by tess
-			Bitmap theNewImage = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
-			theNewImage = theNewImage.copy(Bitmap.Config.ARGB_8888, true);
+			Bitmap theNewImage = null;
+			try {
+				theNewImage = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+				theNewImage = theNewImage.copy(Bitmap.Config.ARGB_8888, true);
+			}catch(OutOfMemoryError e) {
+				try {
+					System.gc();
+					
+					theNewImage = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+					theNewImage = theNewImage.copy(Bitmap.Config.ARGB_8888, true);
+				}catch(OutOfMemoryError e2) {
+					e2.printStackTrace();
+				}
+			}
 
 			if (theNewImage != null) {
 				bitmap = theNewImage;
