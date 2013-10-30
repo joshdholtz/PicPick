@@ -125,7 +125,21 @@ public class PicPickDialog extends DialogFragment {
 					String filePath = cursor.getString(columnIndex);
 					cursor.close();
 
-					bmp = BitmapFactory.decodeFile(filePath);
+					BitmapFactory.Options options = new BitmapFactory.Options();
+					options.inSampleSize = 2;
+					
+					try {
+						bmp = BitmapFactory.decodeFile(filePath, options);
+					}catch(OutOfMemoryError e) {
+						
+						System.gc();
+						
+						try {
+							bmp = BitmapFactory.decodeFile(filePath, options);
+						}catch(OutOfMemoryError e2) {
+							e2.printStackTrace();
+						}
+					}
 
 					if (filePath != null) {
 						ExifInterface exif = null;
@@ -168,9 +182,20 @@ public class PicPickDialog extends DialogFragment {
 							mtx.preRotate(rotate);
 
 							// Rotating Bitmap & convert to ARGB_8888, required by tess
-							Bitmap theNewImage = Bitmap.createBitmap(bmp, 0, 0, w, h, mtx, false);
-							theNewImage = theNewImage.copy(Bitmap.Config.ARGB_8888, true);
+							Bitmap theNewImage = null;
+							try {
+							
+								theNewImage = Bitmap.createBitmap(bmp, 0, 0, w, h, mtx, false).copy(Bitmap.Config.ARGB_8888, true);
 
+							} catch(OutOfMemoryError e) {
+								System.gc();
+								
+								try {	
+									theNewImage = Bitmap.createBitmap(bmp, 0, 0, w, h, mtx, false).copy(Bitmap.Config.ARGB_8888, true);
+								}catch(OutOfMemoryError e2) {
+									e2.printStackTrace();
+								}
+							}
 							if (theNewImage != null) {
 								bmp = theNewImage;
 							}
@@ -207,8 +232,19 @@ public class PicPickDialog extends DialogFragment {
 				// Loads from data
 				if (u != null) {
 					try {
-						bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), u);
-					} catch (Exception e) { e.printStackTrace(); }
+						try {
+							bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), u);
+						} catch (OutOfMemoryError e) { 
+							try {
+								System.gc();
+								bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), u);
+							} catch (OutOfMemoryError e2) {
+								e2.printStackTrace();
+							}
+						}
+					}catch(Exception e) {
+						e.printStackTrace(); 
+					}
 				} else {
 					bmp = (Bitmap) imageReturnedIntent.getExtras().get("data");
 				}
@@ -343,8 +379,20 @@ public class PicPickDialog extends DialogFragment {
 			mtx.preRotate(rotate);
 
 			// Rotating Bitmap & convert to ARGB_8888, required by tess
-			Bitmap theNewImage = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
-			theNewImage = theNewImage.copy(Bitmap.Config.ARGB_8888, true);
+			Bitmap theNewImage = null;
+			try {
+				theNewImage = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+				theNewImage = theNewImage.copy(Bitmap.Config.ARGB_8888, true);
+			}catch(OutOfMemoryError e) {
+				try {
+					System.gc();
+					
+					theNewImage = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+					theNewImage = theNewImage.copy(Bitmap.Config.ARGB_8888, true);
+				}catch(OutOfMemoryError e2) {
+					e2.printStackTrace();
+				}
+			}
 
 			if (theNewImage != null) {
 				bitmap = theNewImage;
