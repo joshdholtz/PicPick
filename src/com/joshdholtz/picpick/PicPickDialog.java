@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,6 +44,7 @@ public class PicPickDialog extends DialogFragment {
 
 	private final static int RESULT_GALLERY = 1111;
 	private final static int RESULT_CAMERA = 2222;
+	private final static int RESULT_CAMERA_SAMSUNG = 3333;
 
 	View view;
 
@@ -218,6 +220,30 @@ public class PicPickDialog extends DialogFragment {
 				Toast.makeText(getActivity(), "HERE SOME ERROR", Toast.LENGTH_SHORT).show();
 			}
 			break;
+		case RESULT_CAMERA_SAMSUNG:
+			Bundle extras = imageReturnedIntent.getExtras();
+            if (extras.keySet().contains("data") ){
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                bmp = (Bitmap) extras.get("data");
+                if (bmp != null) {
+//                    BitmapFactory.Options opt = new BitmapFactory.Options();
+//                    bmp = (Bitmap) extras.get("data");
+                }
+            } else {
+                Uri imageURI = getActivity().getIntent().getData();
+                ContentResolver cr = getActivity().getContentResolver();
+                InputStream in;
+				try {
+					in = cr.openInputStream(imageURI);
+					BitmapFactory.Options options = new BitmapFactory.Options();
+	                options.inSampleSize=8;
+	                bmp = BitmapFactory.decodeStream(in,null,options);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+			break;
 		}
 
 		updateView();
@@ -247,13 +273,16 @@ public class PicPickDialog extends DialogFragment {
 						Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 						startActivityForResult(i, RESULT_GALLERY);
 					} else if (item == 1) {
+						String BX1 =  android.os.Build.MANUFACTURER;
+						
 						Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 						if (hasImageCaptureBug()) {
 							cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File("/sdcard/tmp")));
 						} else {
 							//	                    	cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 						}
-						startActivityForResult(cameraIntent, RESULT_CAMERA);
+						
+						startActivityForResult(cameraIntent, ( BX1.equalsIgnoreCase("samsung") ? RESULT_CAMERA_SAMSUNG : RESULT_CAMERA));
 					}
 					dialog.dismiss();
 				}

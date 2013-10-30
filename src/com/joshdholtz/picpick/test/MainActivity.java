@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
 
@@ -23,6 +24,10 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 		
 		imageView = (ImageView) this.findViewById(R.id.image_view);
+		
+//		TextView txtMakeModel = (TextView) this.findViewById(R.id.makemodel);
+//		txtMakeModel.setText(android.os.Build.BRAND + "/" + android.os.Build.PRODUCT + "/"
+//				+ android.os.Build.DEVICE);
 	}
 
 	@Override
